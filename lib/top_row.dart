@@ -23,61 +23,68 @@ class TopRow extends StatefulWidget {
 class _TopRowState extends State<TopRow> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Container(
-              width: 160,
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).primaryColor,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).primaryColor,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
-                onPressed: widget.timerFinished
-                    ? null
-                    : () {
-                        setState(() {
-                          widget.streamSubscription.isPaused
-                              ? widget.streamSubscription.resume()
-                              : widget.streamSubscription.pause();
-                        });
-                      },
-                icon: widget.streamSubscription.isPaused
-                    ? const Icon(Icons.play_arrow)
-                    : const Icon(Icons.pause),
-                label: widget.streamSubscription.isPaused
-                    ? const Text("Resume")
-                    : const Text("Pause / Stop"),
               ),
+              onPressed: widget.timerFinished
+                  ? null
+                  : () {
+                      setState(() {
+                        widget.streamSubscription.isPaused
+                            ? widget.streamSubscription.resume()
+                            : widget.streamSubscription.pause();
+                      });
+                    },
+              icon: widget.streamSubscription.isPaused
+                  ? const Icon(Icons.play_arrow)
+                  : const Icon(Icons.pause),
+              label: widget.streamSubscription.isPaused
+                  ? const Text("Resume")
+                  : const Text("Pause / Stop"),
             ),
-            Text(
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
               widget.time.minute.toString() +
                   ':' +
                   widget.time.second.toString().padLeft(2, '0'),
               style:
                   Theme.of(context).textTheme.headline4!.copyWith(fontSize: 30),
             ),
-          ],
-        ),
-        if (widget.streamSubscription.isPaused)
-          TextButton.icon(
-            style: TextButton.styleFrom(
-              primary: Theme.of(context).primaryColor,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-            ),
-            onPressed: widget.restartWorkout,
-            icon: const Icon(Icons.restart_alt),
-            label: const Text("Start new workout"),
           ),
+        ),
+        Expanded(
+          child: Visibility(
+            visible: widget.streamSubscription.isPaused,
+            maintainAnimation: true,
+            maintainSize: true,
+            maintainState: true,
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                primary: Theme.of(context).primaryColor,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              onPressed: widget.restartWorkout,
+              icon: const Icon(Icons.restart_alt),
+              label: const Text("Start new workout"),
+            ),
+          ),
+        ),
       ],
     );
   }
