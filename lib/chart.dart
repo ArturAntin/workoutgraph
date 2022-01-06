@@ -12,6 +12,7 @@ class LineGraph extends StatelessWidget {
   final double width;
   final double? average;
   final Color averageColor;
+  final int lines;
 
   const LineGraph({
     Key? key,
@@ -25,6 +26,7 @@ class LineGraph extends StatelessWidget {
     required this.width,
     this.average,
     this.averageColor = Colors.red,
+    this.lines = 3,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class LineGraph extends StatelessWidget {
           y: y,
           average: average,
           avergageColor: averageColor,
+          lines: lines,
         ),
       ),
     );

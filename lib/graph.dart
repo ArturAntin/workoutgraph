@@ -3,12 +3,24 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutgraph/chart.dart';
-import 'package:workoutgraph/main.dart';
 
 class Graph extends StatelessWidget {
-  Graph({Key? key, required this.data}) : super(key: key);
+  Graph({
+    Key? key,
+    required this.data,
+    required this.maxY,
+    required this.maxX,
+    this.height = 150,
+    this.width = 300,
+    this.lines = 3,
+  }) : super(key: key);
 
   final List<int> data;
+  final int maxY;
+  final int maxX;
+  final double height;
+  final double width;
+  final int lines;
 
   double get _average => data.average;
   int get _max => data.reduce(max);
@@ -28,13 +40,14 @@ class Graph extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: LineGraph(
                 data: data,
-                x: HomePage.maxTime,
-                y: HomePage.maxY,
-                labelY: const ['0', '8', '16', '24'],
+                x: maxX,
+                y: maxY,
+                lines: lines,
+                labelY: getLabelsY(maxY),
                 graphColor: Theme.of(context).primaryColor,
                 infosColor: Theme.of(context).hintColor,
-                height: 150,
-                width: 300,
+                height: height,
+                width: width,
                 average: _average,
               ),
             ),
@@ -127,5 +140,14 @@ class Graph extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<String> getLabelsY(int maxY) {
+    int distance = (maxY / lines).truncate();
+    List<String> res = [];
+    for (int i = 0; i <= maxY; i += distance) {
+      res.add(i.toString());
+    }
+    return res;
   }
 }

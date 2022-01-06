@@ -13,7 +13,7 @@ Stream<int> timedCounter([int maxTime = 10 * 60]) {
   void tick(_) {
     time++;
 
-    ///creates a random number 0..24 and puts it into the stream
+    ///creates a random number 0..maxY and puts it into the stream
     controller.add(
       _random.nextInt(HomePage.maxY + 1),
     );

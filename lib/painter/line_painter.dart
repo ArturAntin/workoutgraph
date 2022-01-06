@@ -11,6 +11,7 @@ class LineGraphPainter extends CustomPainter {
   final int y;
   final double? average;
   final Color avergageColor;
+  final int lines;
 
   LineGraphPainter({
     required this.data,
@@ -21,6 +22,7 @@ class LineGraphPainter extends CustomPainter {
     required this.y,
     this.average,
     this.avergageColor = Colors.red,
+    this.lines = 3,
   });
 
   @override
@@ -40,25 +42,19 @@ class LineGraphPainter extends CustomPainter {
       size.height - 2 * margin.height,
     );
     Size cell = Size(
-      graph.width / (x - 1),
+      graph.width / (x - 10),
       graph.height / y,
     );
 
     drawAxis(canvas, graph, margin);
     drawLabelsY(canvas, size, margin, graph, cell);
-    drawLabelsX(canvas, margin, graph, cell);
     drawVerticalLine(canvas, graph, margin, cell);
     if (average != null && data.length > 5) {
       drawAverageLine(canvas, graph, margin, cell, average!);
     }
 
     for (int i = 0; i < data.length; i++) {
-      drawGraph(
-        canvas,
-        graph,
-        cell,
-        margin,
-      );
+      drawGraph(canvas, graph, cell, margin);
     }
   }
 
@@ -68,46 +64,25 @@ class LineGraphPainter extends CustomPainter {
   }
 
   void drawAxis(Canvas canvas, Size graph, Size margin) {
-    double spaceBetween = graph.height / 3;
+    double spaceBetween = graph.height / lines;
     Paint linePaint = Paint()
       ..color = infosColor
       ..strokeWidth = 1;
 
     //X-Axis and horizontal lines
-    canvas.drawLine(
-        Offset(margin.width, graph.height + margin.height),
-        Offset(graph.width + 2 * margin.width, graph.height + margin.height),
-        linePaint);
-
-    canvas.drawLine(
-        Offset(margin.width, graph.height + margin.height - spaceBetween),
-        Offset(graph.width + 2 * margin.width,
-            graph.height + margin.height - spaceBetween),
-        linePaint);
-
-    canvas.drawLine(
-        Offset(margin.width, graph.height + margin.height - spaceBetween * 2),
-        Offset(graph.width + 2 * margin.width,
-            graph.height + margin.height - spaceBetween * 2),
-        linePaint);
-
-    canvas.drawLine(
-        Offset(margin.width, graph.height + margin.height - spaceBetween * 3),
-        Offset(graph.width + 2 * margin.width,
-            graph.height + margin.height - spaceBetween * 3),
-        linePaint);
-
-    // canvas.drawLine(
-    //     Offset(margin.width, graph.height + margin.height - spaceBetween * 4),
-    //     Offset(graph.width + 2 * margin.width,
-    //         graph.height + margin.height - spaceBetween * 4),
-    //     linePaint);
-
-    //Y-Axis
-    // Offset yStart = Offset(margin.width, 0);
-
-    // canvas.drawLine(
-    //     yStart, Offset(margin.width, graph.height + margin.height), linePaint);
+    for (int i = 0; i <= lines; i++) {
+      canvas.drawLine(
+        Offset(
+          margin.width,
+          graph.height + margin.height - spaceBetween * i,
+        ),
+        Offset(
+          graph.width + 2 * margin.width,
+          graph.height + margin.height - spaceBetween * i,
+        ),
+        linePaint,
+      );
+    }
   }
 
   void drawAverageLine(
@@ -154,13 +129,12 @@ class LineGraphPainter extends CustomPainter {
     );
 
     Paint fillPaint = Paint()
-      ..color = graphColor.withOpacity(.5)
       ..style = PaintingStyle.fill
       ..shader = ui.Gradient.linear(
         startOffset,
         marginOffset,
         [
-          graphColor.withOpacity(.5),
+          graphColor.withOpacity(.3),
           graphColor.withOpacity(.1),
         ],
       );
@@ -191,31 +165,8 @@ class LineGraphPainter extends CustomPainter {
       tp.paint(
         canvas,
         Offset(
-          x / 20,
-          margin.height + graph.height - 8 - (i * 8) * cell.height,
-        ),
-      );
-    }
-  }
-
-  void drawLabelsX(Canvas canvas, Size margin, Size graph, Size cell) {
-    for (int i = 0; i < x; i++) {
-      TextSpan span = TextSpan(
-        style: TextStyle(
-          color: graphColor,
-        ),
-        text: '',
-      );
-      TextPainter tp = TextPainter(
-          text: span,
-          textAlign: TextAlign.left,
-          textDirection: TextDirection.ltr);
-      tp.layout();
-      tp.paint(
-        canvas,
-        Offset(
-          margin.width + cell.width * i - 16,
-          margin.height + graph.height + 10,
+          x / 5,
+          graph.height + margin.height - graph.height / lines * i - 9,
         ),
       );
     }
