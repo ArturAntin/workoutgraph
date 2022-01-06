@@ -6,19 +6,21 @@ class LineGraphPainter extends CustomPainter {
   final List<int> data;
   final List<String> labelY;
   final Color graphColor;
-  final double graphOpacity;
   final Color infosColor;
   final int x;
   final int y;
+  final double? average;
+  final Color avergageColor;
 
   LineGraphPainter({
     required this.data,
     required this.labelY,
     required this.graphColor,
-    required this.graphOpacity,
     required this.infosColor,
     required this.x,
     required this.y,
+    this.average,
+    this.avergageColor = Colors.red,
   });
 
   @override
@@ -46,6 +48,9 @@ class LineGraphPainter extends CustomPainter {
     drawLabelsY(canvas, size, margin, graph, cell);
     drawLabelsX(canvas, margin, graph, cell);
     drawVerticalLine(canvas, graph, margin, cell);
+    if (average != null && data.length > 5) {
+      drawAverageLine(canvas, graph, margin, cell, average!);
+    }
 
     for (int i = 0; i < data.length; i++) {
       drawGraph(
@@ -103,6 +108,26 @@ class LineGraphPainter extends CustomPainter {
 
     // canvas.drawLine(
     //     yStart, Offset(margin.width, graph.height + margin.height), linePaint);
+  }
+
+  void drawAverageLine(
+      Canvas canvas, Size graph, Size margin, Size cell, double average) {
+    Paint linePaint = Paint()
+      ..color = avergageColor
+      ..strokeWidth = 1;
+    double normedAvg = average / y;
+
+    canvas.drawLine(
+      Offset(
+        margin.width,
+        graph.height + margin.height - normedAvg * graph.height,
+      ),
+      Offset(
+        margin.width - cell.width + cell.width * data.length,
+        graph.height + margin.height - normedAvg * graph.height,
+      ),
+      linePaint,
+    );
   }
 
   void drawVerticalLine(Canvas canvas, Size graph, Size margin, Size cell) {
@@ -197,9 +222,6 @@ class LineGraphPainter extends CustomPainter {
   }
 
   void drawGraph(Canvas canvas, Size graph, Size cell, Size margin) {
-    Paint fillPaint = Paint()
-      ..color = graphColor.withOpacity(graphOpacity)
-      ..style = PaintingStyle.fill;
     Paint strokePaint = Paint()
       ..color = graphColor
       ..strokeWidth = 2
@@ -207,13 +229,7 @@ class LineGraphPainter extends CustomPainter {
 
     List<double> normedData = data.map((e) => e / y).toList();
 
-    Path path = Path();
     Path linePath = Path();
-    path.moveTo(margin.width, graph.height + margin.height);
-    path.lineTo(
-      margin.width,
-      margin.height + graph.height - normedData[0] * graph.height,
-    );
     linePath.moveTo(
       margin.width,
       margin.height + graph.height - normedData[0] * graph.height,
@@ -226,23 +242,16 @@ class LineGraphPainter extends CustomPainter {
       if (normedData[i] < 0) {
         normedData[i] = 0;
       }
-      path.lineTo(
+
+      linePath.lineTo(
         margin.width + i * cell.width,
-        margin.height + graph.height - normedData[i] * graph.height,
+        margin.height + graph.height - normedData[i - 1] * graph.height,
       );
       linePath.lineTo(
         margin.width + i * cell.width,
         margin.height + graph.height - normedData[i] * graph.height,
       );
     }
-    //TODO linien mit rechtem winkel zeichnen
-    path.lineTo(
-        margin.width + (normedData.length - 1) * cell.width, margin.height);
-    path.lineTo(
-      margin.width + cell.width * (i - 1),
-      margin.height + graph.height,
-    );
-    canvas.drawPath(path, fillPaint);
     canvas.drawPath(linePath, strokePaint);
   }
 }

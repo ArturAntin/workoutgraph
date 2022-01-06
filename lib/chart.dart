@@ -8,9 +8,10 @@ class LineGraph extends StatelessWidget {
   final List<String> labelY;
   final Color graphColor;
   final Color infosColor;
-  final double graphOpacity;
   final double height;
   final double width;
+  final double? average;
+  final Color averageColor;
 
   const LineGraph({
     Key? key,
@@ -20,9 +21,10 @@ class LineGraph extends StatelessWidget {
     this.labelY = const [],
     this.graphColor = Colors.blue,
     this.infosColor = Colors.grey,
-    this.graphOpacity = 0.0,
     required this.height,
     required this.width,
+    this.average,
+    this.averageColor = Colors.red,
   }) : super(key: key);
 
   @override
@@ -36,10 +38,11 @@ class LineGraph extends StatelessWidget {
           data: data,
           labelY: labelY,
           graphColor: graphColor,
-          graphOpacity: graphOpacity,
           infosColor: infosColor,
           x: x,
           y: y,
+          average: average,
+          avergageColor: averageColor,
         ),
       ),
     );

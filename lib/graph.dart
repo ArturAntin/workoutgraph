@@ -35,6 +35,7 @@ class Graph extends StatelessWidget {
                 infosColor: Theme.of(context).hintColor,
                 height: 150,
                 width: 300,
+                average: _average,
               ),
             ),
           ),
