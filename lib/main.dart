@@ -11,8 +11,6 @@ void main() {
   runApp(const MyApp());
 }
 
-//TODO https://dart.dev/articles/libraries/creating-streams#using-a-streamcontroller
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -34,6 +32,9 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  static const maxTime = 10 * 60;
+  static const maxY = 24;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -42,8 +43,8 @@ class _HomePageState extends State<HomePage> {
   final _streamData = <int>[];
   DateTime _time = DateTime.fromMillisecondsSinceEpoch(0);
   StreamSubscription? _streamSubscription;
-  final MyStream _myStream = MyStream();
   final BorderRadius _borderRadius = BorderRadius.circular(8.0);
+  bool _timerFinished = false;
 
   @override
   void initState() {
@@ -52,22 +53,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   void subscribeToStream() {
-    if (_streamSubscription != null) _streamSubscription!.cancel();
-    _streamSubscription = _myStream.stream.listen((event) {
-      if (_streamSubscription != null && !_streamSubscription!.isPaused) {
-        _streamData.add(event);
-        setState(() {
-          _time =
-              DateTime.fromMillisecondsSinceEpoch(_streamData.length * 1000);
-        });
-      }
+    _streamSubscription = timedCounter(HomePage.maxTime).listen((int event) {
+      _streamData.add(event);
+      setState(() {
+        _time = DateTime.fromMillisecondsSinceEpoch(_streamData.length * 1000);
+        if (_streamData.length >= HomePage.maxTime) _timerFinished = true;
+      });
     });
   }
 
   void restartWorkout() {
     setState(() {
       _streamData.clear();
-      _myStream.reset();
+      _timerFinished = false;
       subscribeToStream();
       _time = DateTime.fromMillisecondsSinceEpoch(0);
     });
@@ -110,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                             ),
-                            onPressed: _myStream.timerFinished
+                            onPressed: _timerFinished
                                 ? null
                                 : () {
                                     setState(() {
@@ -155,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                     ),
 
                     //show Banner if workout is completed
-                    if (_myStream.timerFinished)
+                    if (_timerFinished)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ClipRRect(

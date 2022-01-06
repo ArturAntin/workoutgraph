@@ -1,40 +1,45 @@
 import 'dart:async';
 import 'dart:math';
 
-class MyStream {
-  final _controller = StreamController<int>();
+import 'package:workoutgraph/main.dart';
+
+Stream<int> timedCounter([int maxTime = 10 * 60]) {
+  Duration interval = const Duration(seconds: 1);
+  late StreamController<int> controller;
+  Timer? timer;
+  int time = 0;
   final _random = Random();
 
-  ///maxTime is 1 minute, so 1 minutes * 60 seconds
-  static const maxTime = 10 * 60;
-  static const maxY = 24;
+  void tick(_) {
+    time++;
 
-  int _time = 0;
-  bool _timerFinished = false;
-
-  MyStream() {
-    Timer.periodic(const Duration(seconds: 1), (timer) => timerAction(timer));
-  }
-
-  void reset() {
-    _time = 0;
-    _timerFinished = false;
-    Timer.periodic(const Duration(seconds: 1), (timer) => timerAction(timer));
-  }
-
-  void timerAction(Timer timer) {
     ///creates a random number 0..24 and puts it into the stream
-    _controller.sink.add(_random.nextInt(maxY + 1));
-    _time++;
+    controller.add(
+      _random.nextInt(HomePage.maxY + 1),
+    );
 
     ///checks if maxTime is reached and cancels the timer if true
-    if (_time >= maxTime) {
-      timer.cancel();
-      _timerFinished = true;
+    if (time >= maxTime) {
+      timer?.cancel();
+      controller.close();
     }
   }
 
-  Stream<int> get stream => _controller.stream;
+  void startTimer() {
+    timer = Timer.periodic(interval, tick);
+  }
 
-  bool get timerFinished => _timerFinished;
+  void stopTimer() {
+    timer?.cancel();
+    timer = null;
+  }
+
+  controller = StreamController<int>(
+    onListen: startTimer,
+    onPause: stopTimer,
+    onResume: startTimer,
+    onCancel: stopTimer,
+  );
+
+  return controller.stream;
 }

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutgraph/chart.dart';
-import 'package:workoutgraph/data_stream.dart';
+import 'package:workoutgraph/main.dart';
 
 class Graph extends StatelessWidget {
   Graph({Key? key, required this.data}) : super(key: key);
@@ -28,8 +28,8 @@ class Graph extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: LineGraph(
                 data: data,
-                x: MyStream.maxTime,
-                y: MyStream.maxY,
+                x: HomePage.maxTime,
+                y: HomePage.maxY,
                 labelY: const ['0', '8', '16', '24'],
                 graphColor: Theme.of(context).primaryColor,
                 infosColor: Theme.of(context).hintColor,
