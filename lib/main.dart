@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  static const maxTime = 10 * 60;
+  static const maxTime = 1 * 60;
   static const maxY = 24;
 
   @override
@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription? _streamSubscription;
   final BorderRadius _borderRadius = BorderRadius.circular(8.0);
   bool _timerFinished = false;
+  final _random = Random();
 
   @override
   void initState() {
@@ -190,28 +191,28 @@ class _HomePageState extends State<HomePage> {
                     Wrap(
                       spacing: 24,
                       runSpacing: 12,
-                      children: const [
+                      children: [
                         CircleInfo(
                           text: "km/h",
-                          number: 24,
+                          number: _random.nextInt(10) + 15,
                           maxNumber: 30,
                           icon: Icons.speed,
                         ),
                         CircleInfo(
                           text: "rpm",
-                          number: 99,
+                          number: _random.nextInt(30) + 150,
                           maxNumber: 200,
                           icon: Icons.repeat,
                         ),
                         CircleInfo(
                           text: "watt",
-                          number: 142,
+                          number: _random.nextInt(30) + 140,
                           maxNumber: 180,
                           icon: Icons.bolt,
                         ),
                         CircleInfo(
                           text: "bpm",
-                          number: 143,
+                          number: _random.nextInt(50) + 100,
                           maxNumber: 160,
                           icon: Icons.favorite,
                         ),
