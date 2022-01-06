@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  ///[maxTime] represents the time after the workout is completed. When this time is reached, the timer will stop.
+  ///[maxTime] represents the time in seconds after the workout is completed. When this time is reached, the timer will stop.
   ///[maxY] is the amplitude of y
   ///[lines] is the number of horizontal lines shown in the graph plus the line at the bottom
   ///[maxY] needs to be divisible by [lines] so the graph will show the correct numbers on the side
@@ -56,6 +56,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     subscribeToStream();
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
   }
 
   void subscribeToStream() {

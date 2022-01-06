@@ -7,24 +7,49 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:workoutgraph/circle_info.dart';
 
 import 'package:workoutgraph/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Banner is shown after workout is done',
+      (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
+    expect(find.byType(MaterialBanner), findsNothing);
+    await tester.pump(const Duration(seconds: HomePage.maxTime));
+    expect(find.byType(MaterialBanner), findsOneWidget);
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('Circle Gauges are shown', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.byType(CircleInfo), findsWidgets);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('time is adding one every second', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text("0:02"), findsWidgets);
+
+    await tester.pump(const Duration(seconds: 2));
+
+    expect(find.text("0:04"), findsWidgets);
+  });
+
+  testWidgets('Pause Button actually pauses the time',
+      (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text("0:02"), findsWidgets);
+
+    await tester.tap(find.byIcon(Icons.pause));
     await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text("0:02"), findsWidgets);
   });
 }
