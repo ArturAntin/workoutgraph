@@ -17,7 +17,10 @@ class Graph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white54,
+      decoration: BoxDecoration(
+        borderRadius: _borderRadius,
+        color: Colors.white54,
+      ),
       child: Row(
         children: [
           Expanded(
@@ -39,20 +42,21 @@ class Graph extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: _borderRadius,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text("Level"),
-                        Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
+                  ),
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text("Level"),
+                      Icon(Icons.arrow_drop_down),
+                    ],
                   ),
                 ),
                 Row(

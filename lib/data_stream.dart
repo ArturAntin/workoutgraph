@@ -6,7 +6,7 @@ class MyStream {
   final _random = Random();
 
   ///maxTime is 1 minute, so 1 minutes * 60 seconds
-  static const maxTime = 1 * 60;
+  static const maxTime = 10 * 60;
   static const maxY = 24;
 
   int _time = 0;

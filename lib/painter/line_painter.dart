@@ -235,6 +235,7 @@ class LineGraphPainter extends CustomPainter {
         margin.height + graph.height - normedData[i] * graph.height,
       );
     }
+    //TODO linien mit rechtem winkel zeichnen
     path.lineTo(
         margin.width + (normedData.length - 1) * cell.width, margin.height);
     path.lineTo(

@@ -11,6 +11,8 @@ void main() {
   runApp(const MyApp());
 }
 
+//TODO https://dart.dev/articles/libraries/creating-streams#using-a-streamcontroller
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -95,12 +97,18 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     //Pause Button and Time
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Padding(
+                        Container(
+                          width: 160,
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                               primary: Theme.of(context).primaryColor,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
                             ),
                             onPressed: _myStream.timerFinished
                                 ? null
@@ -119,24 +127,30 @@ class _HomePageState extends State<HomePage> {
                                 : const Text("Pause / Stop"),
                           ),
                         ),
-                        const Spacer(),
                         Text(
                           _time.minute.toString() +
                               ':' +
                               _time.second.toString().padLeft(2, '0'),
                           style: Theme.of(context).textTheme.headline5,
                         ),
-                        const Spacer(),
-                        if (_streamSubscription!.isPaused)
-                          TextButton.icon(
+                        Visibility(
+                          visible: _streamSubscription!.isPaused,
+                          maintainSize: true,
+                          maintainState: true,
+                          maintainAnimation: true,
+                          child: TextButton.icon(
                             style: TextButton.styleFrom(
                               primary: Theme.of(context).primaryColor,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
                             ),
                             onPressed: restartWorkout,
                             icon: const Icon(Icons.restart_alt),
                             label: const Text("Start new workout"),
                           ),
-                        if (_streamSubscription!.isPaused) const Spacer()
+                        ),
                       ],
                     ),
 
@@ -170,11 +184,8 @@ class _HomePageState extends State<HomePage> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: _borderRadius,
-                        child: Graph(
-                          data: _streamData,
-                        ),
+                      child: Graph(
+                        data: _streamData,
                       ),
                     ),
 
