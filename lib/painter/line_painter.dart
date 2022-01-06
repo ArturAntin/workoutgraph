@@ -12,6 +12,7 @@ class LineGraphPainter extends CustomPainter {
   final double? average;
   final Color avergageColor;
   final int lines;
+  final int avgMinAmount;
 
   LineGraphPainter({
     required this.data,
@@ -23,6 +24,7 @@ class LineGraphPainter extends CustomPainter {
     this.average,
     this.avergageColor = Colors.red,
     this.lines = 3,
+    this.avgMinAmount = 5,
   });
 
   @override
@@ -42,14 +44,14 @@ class LineGraphPainter extends CustomPainter {
       size.height - 2 * margin.height,
     );
     Size cell = Size(
-      graph.width / (x - 10),
+      graph.width / (x - 5),
       graph.height / y,
     );
 
     drawAxis(canvas, graph, margin);
     drawLabelsY(canvas, size, margin, graph, cell);
     drawVerticalLine(canvas, graph, margin, cell);
-    if (average != null && data.length > 5) {
+    if (average != null && data.length > avgMinAmount) {
       drawAverageLine(canvas, graph, margin, cell, average!);
     }
 

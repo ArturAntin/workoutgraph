@@ -28,116 +28,133 @@ class Graph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: _borderRadius,
-        color: Colors.white54,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: LineGraph(
-                data: data,
-                x: maxX,
-                y: maxY,
-                lines: lines,
-                labelY: getLabelsY(maxY),
-                graphColor: Theme.of(context).primaryColor,
-                infosColor: Theme.of(context).hintColor,
-                height: height,
-                width: width,
-                average: _average,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: _borderRadius,
+          color: Colors.white54,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: LineGraph(
+                  data: data,
+                  x: maxX,
+                  y: maxY,
+                  lines: lines,
+                  labelY: getLabelsY(maxY),
+                  graphColor: Theme.of(context).primaryColor,
+                  infosColor: Theme.of(context).hintColor,
+                  height: height,
+                  width: width,
+                  average: _average,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text("Level"),
-                      Icon(Icons.arrow_drop_down),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 48,
-                      child: Center(
-                        child: Text(
-                          data.last.toString(),
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
+            Container(
+              width: 150,
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const RotationTransition(
-                              turns: AlwaysStoppedAnimation(90 / 360),
-                              child: Icon(Icons.motion_photos_off_outlined),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            SizedBox(
-                              width: 24,
-                              child: Text(
-                                _average.truncate().toString(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .copyWith(fontSize: 18),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.arrow_circle_up),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            SizedBox(
-                              width: 24,
-                              child: Text(
-                                _max.toString(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .copyWith(fontSize: 18),
-                              ),
-                            ),
-                          ],
-                        )
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text("Level"),
+                        Icon(Icons.arrow_drop_down),
                       ],
-                    )
-                  ],
-                )
-              ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child: Center(
+                          child: Text(
+                            data.last.toString(),
+                            style: Theme.of(context).textTheme.headline3,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              const RotationTransition(
+                                turns: AlwaysStoppedAnimation(90 / 360),
+                                child: Icon(
+                                  Icons.motion_photos_off_outlined,
+                                  color: Colors.blueGrey,
+                                  size: 16,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              SizedBox(
+                                width: 20,
+                                child: Text(
+                                  _average.truncate().toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.blueGrey,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.arrow_circle_up,
+                                color: Colors.blueGrey,
+                                size: 16,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              SizedBox(
+                                width: 20,
+                                child: Text(
+                                  _max.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.blueGrey,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

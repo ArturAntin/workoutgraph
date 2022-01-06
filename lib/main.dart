@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:workoutgraph/circle_info.dart';
 import 'package:workoutgraph/data_stream.dart';
+import 'package:workoutgraph/gauges.dart';
 import 'package:workoutgraph/graph.dart';
+import 'package:workoutgraph/top_row.dart';
+import 'package:workoutgraph/workout_done_banner.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,9 +50,7 @@ class _HomePageState extends State<HomePage> {
   final _streamData = <int>[];
   DateTime _time = DateTime.fromMillisecondsSinceEpoch(0);
   StreamSubscription? _streamSubscription;
-  final BorderRadius _borderRadius = BorderRadius.circular(8.0);
   bool _timerFinished = false;
-  final _random = Random();
 
   @override
   void initState() {
@@ -63,7 +63,9 @@ class _HomePageState extends State<HomePage> {
       _streamData.add(event);
       setState(() {
         _time = DateTime.fromMillisecondsSinceEpoch(_streamData.length * 1000);
-        if (_streamData.length >= HomePage.maxTime) _timerFinished = true;
+        if (_streamData.length >= HomePage.maxTime) {
+          _timerFinished = true;
+        }
       });
     });
   }
@@ -100,132 +102,29 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     //Pause Button and Time
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          width: 160,
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context).primaryColor,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                            onPressed: _timerFinished
-                                ? null
-                                : () {
-                                    setState(() {
-                                      _streamSubscription!.isPaused
-                                          ? _streamSubscription!.resume()
-                                          : _streamSubscription!.pause();
-                                    });
-                                  },
-                            icon: _streamSubscription!.isPaused
-                                ? const Icon(Icons.play_arrow)
-                                : const Icon(Icons.pause),
-                            label: _streamSubscription!.isPaused
-                                ? const Text("Resume")
-                                : const Text("Pause / Stop"),
-                          ),
-                        ),
-                        Text(
-                          _time.minute.toString() +
-                              ':' +
-                              _time.second.toString().padLeft(2, '0'),
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                        Visibility(
-                          visible: _streamSubscription!.isPaused,
-                          maintainSize: true,
-                          maintainState: true,
-                          maintainAnimation: true,
-                          child: TextButton.icon(
-                            style: TextButton.styleFrom(
-                              primary: Theme.of(context).primaryColor,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                            onPressed: restartWorkout,
-                            icon: const Icon(Icons.restart_alt),
-                            label: const Text("Start new workout"),
-                          ),
-                        ),
-                      ],
+                    TopRow(
+                      timerFinished: _timerFinished,
+                      streamSubscription: _streamSubscription!,
+                      time: _time,
+                      restartWorkout: restartWorkout,
                     ),
 
                     //show Banner if workout is completed
                     if (_timerFinished)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          borderRadius: _borderRadius,
-                          child: MaterialBanner(
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            forceActionsBelow: true,
-                            content: Text(
-                              "Good job! Your workout is over.\nYour average level was ${_streamData.average.toStringAsFixed(2)}\nYour maximum level was ${_streamData.reduce(max)}",
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                            actions: [
-                              TextButton.icon(
-                                style: TextButton.styleFrom(
-                                  primary: Theme.of(context).primaryColorDark,
-                                ),
-                                onPressed: restartWorkout,
-                                icon: const Icon(Icons.restart_alt),
-                                label: const Text("Start new workout"),
-                              )
-                            ],
-                          ),
-                        ),
+                      WorkoutDoneBanner(
+                        avg: _streamData.average,
+                        max: _streamData.reduce(max),
+                        restartWorkout: restartWorkout,
                       ),
 
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Graph(
-                        data: _streamData,
-                        maxX: HomePage.maxTime,
-                        maxY: HomePage.maxY,
-                        lines: HomePage.lines,
-                      ),
+                    Graph(
+                      data: _streamData,
+                      maxX: HomePage.maxTime,
+                      maxY: HomePage.maxY,
+                      lines: HomePage.lines,
                     ),
 
-                    Wrap(
-                      spacing: 24,
-                      runSpacing: 12,
-                      children: [
-                        CircleInfo(
-                          text: "km/h",
-                          number: _random.nextInt(10) + 15,
-                          maxNumber: 30,
-                          icon: Icons.speed,
-                        ),
-                        CircleInfo(
-                          text: "rpm",
-                          number: _random.nextInt(30) + 150,
-                          maxNumber: 200,
-                          icon: Icons.repeat,
-                        ),
-                        CircleInfo(
-                          text: "watt",
-                          number: _random.nextInt(30) + 140,
-                          maxNumber: 180,
-                          icon: Icons.bolt,
-                        ),
-                        CircleInfo(
-                          text: "bpm",
-                          number: _random.nextInt(50) + 100,
-                          maxNumber: 160,
-                          icon: Icons.favorite,
-                        ),
-                      ],
-                    ),
+                    Gauges(),
                   ],
                 ),
               ),
