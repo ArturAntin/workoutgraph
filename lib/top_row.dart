@@ -60,22 +60,24 @@ class _TopRowState extends State<TopRow> {
               widget.time.second.toString().padLeft(2, '0'),
           style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 30),
         ),
-        Visibility(
-          visible: widget.streamSubscription.isPaused,
-          maintainSize: true,
-          maintainState: true,
-          maintainAnimation: true,
-          child: TextButton.icon(
-            style: TextButton.styleFrom(
-              primary: Theme.of(context).primaryColor,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
+        Expanded(
+          child: Visibility(
+            visible: widget.streamSubscription.isPaused,
+            maintainSize: true,
+            maintainState: true,
+            maintainAnimation: true,
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                primary: Theme.of(context).primaryColor,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
               ),
+              onPressed: widget.restartWorkout,
+              icon: const Icon(Icons.restart_alt),
+              label: const Text("Start new workout"),
             ),
-            onPressed: widget.restartWorkout,
-            icon: const Icon(Icons.restart_alt),
-            label: const Text("Start new workout"),
           ),
         ),
       ],
